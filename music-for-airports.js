@@ -16,7 +16,7 @@ function fillHarpLibrary() {
       library.push({
         note: note.toUpperCase(),
         octave: octave,
-        file: `Samples/Cello/cello-${note}${octave}.mp3`
+        file: `cello-${note}${octave}.mp3`
       })
     })
   })
@@ -53,7 +53,7 @@ function getNearestSample( sampleBank, note, octave ) {
 }
 
 function fetchSample( path ) {
-  return fetch(encodeURIComponent(path))
+  return fetch('Samples/' + encodeURIComponent(path))
     .then(response => response.arrayBuffer())
     .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer));
 }
