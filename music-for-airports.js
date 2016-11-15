@@ -1,23 +1,44 @@
 const OCTAVE = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
+// const SAMPLE_LIBRARY = {
+//   'Grand Piano': [
+//     { note: 'A', octave: 4, file: 'Samples/Grand Piano/piano-f-a4.wav' },
+//     { note: 'A',  octave: 5, file: 'Samples/Grand Piano/piano-f-a5.wav' },
+//     { note: 'A',  octave: 6, file: 'Samples/Grand Piano/piano-f-a6.wav' },
+//     { note: 'C',  octave: 4, file: 'Samples/Grand Piano/piano-f-c4.wav' },
+//     { note: 'C',  octave: 5, file: 'Samples/Grand Piano/piano-f-c5.wav' },
+//     { note: 'C',  octave: 6, file: 'Samples/Grand Piano/piano-f-c6.wav' },
+//     { note: 'D#',  octave: 4, file: 'Samples/Grand Piano/piano-f-d#4.wav' },
+//     { note: 'D#',  octave: 5, file: 'Samples/Grand Piano/piano-f-d#5.wav' },
+//     { note: 'D#',  octave: 6, file: 'Samples/Grand Piano/piano-f-d#6.wav' },
+//     { note: 'F#',  octave: 4, file: 'Samples/Grand Piano/piano-f-f#4.wav' },
+//     { note: 'F#',  octave: 5, file: 'Samples/Grand Piano/piano-f-f#5.wav' },
+//     { note: 'F#',  octave: 6, file: 'Samples/Grand Piano/piano-f-f#6.wav' }
+//   ]
+// }
+
 const SAMPLE_LIBRARY = {
-  'Grand Piano': [
-    { note: 'A', octave: 4, file: 'Samples/Grand Piano/piano-f-a4.wav' },
-    { note: 'A',  octave: 5, file: 'Samples/Grand Piano/piano-f-a5.wav' },
-    { note: 'A',  octave: 6, file: 'Samples/Grand Piano/piano-f-a6.wav' },
-    { note: 'C',  octave: 4, file: 'Samples/Grand Piano/piano-f-c4.wav' },
-    { note: 'C',  octave: 5, file: 'Samples/Grand Piano/piano-f-c5.wav' },
-    { note: 'C',  octave: 6, file: 'Samples/Grand Piano/piano-f-c6.wav' },
-    { note: 'D#',  octave: 4, file: 'Samples/Grand Piano/piano-f-d#4.wav' },
-    { note: 'D#',  octave: 5, file: 'Samples/Grand Piano/piano-f-d#5.wav' },
-    { note: 'D#',  octave: 6, file: 'Samples/Grand Piano/piano-f-d#6.wav' },
-    { note: 'F#',  octave: 4, file: 'Samples/Grand Piano/piano-f-f#4.wav' },
-    { note: 'F#',  octave: 5, file: 'Samples/Grand Piano/piano-f-f#5.wav' },
-    { note: 'F#',  octave: 6, file: 'Samples/Grand Piano/piano-f-f#6.wav' }
-  ]
+  'Harp': fillHarpLibrary()
 }
+  console.log(SAMPLE_LIBRARY);
 
 let audioContext = new AudioContext();
+
+function fillHarpLibrary() {
+  let library = [];
+  let notes = ['a','c','d#','f#'];
+  let octaves = [2,3,4,5,6];
+  notes.forEach( (note) => {
+    octaves.forEach((octave) => {
+      library.push({
+        note: note.toUpperCase(),
+        octave: octave,
+        file: `Samples/Cello/cello-${note}${octave}.wav`
+      })
+    })
+  })
+  return library;
+}
 
 function flatToSharp( note ) {
   let enharmonics = {
@@ -71,9 +92,12 @@ function playSample(instrument, note, destination, delaySeconds = 0) {
   getSample(instrument, note).then(({audioBuffer, distance}) => {
     let playbackRate = Math.pow(2, distance / 12);
     let bufferSource = audioContext.createBufferSource();
+    let amp = audioContext.createGain();
     bufferSource.buffer = audioBuffer;
     bufferSource.playbackRate.value = playbackRate;
-    bufferSource.connect( destination );
+    amp.gain.value = 0.1;
+    amp.connect( destination );
+    bufferSource.connect( amp );
     bufferSource.start( audioContext.currentTime + delaySeconds );
   })
 }
@@ -83,7 +107,7 @@ function startLoop(instrument, note, destination, loopLengthSeconds, delaySecond
   setInterval(
     () => playSample( instrument, note, destination, delaySeconds ),
     loopLengthSeconds * 1000
-  );
+    );
 }
 
 fetchSample('AirportTerminal.wav').then(convolverBuffer => {
@@ -91,12 +115,17 @@ fetchSample('AirportTerminal.wav').then(convolverBuffer => {
   convolver.buffer = convolverBuffer;
   convolver.connect( audioContext.destination );
 
-  let notes = ['F4', 'Ab4', 'C5', 'Db5', 'Eb5', 'F5', 'Ab5'];
+  let notes = [ 'D2', 'A2', 'D3', 'G3', 'A3', 'C#4', 'D4' ];
+
+  // let notes = ['F3', 'Ab3', 'C4', 'Db4', 'Eb4', 'F4', 'Ab4'];
+  // let notes = [ 'B2', 'B3', 'E4', 'A4', 'B4', 'E5' ];
+  // let notes = [ 'B2', 'F#3', 'A#3', 'B3', 'D#4', 'F#4' ];
+  // let notes = [ 'C3', 'F4', 'Bb3', 'D4', 'Eb4', 'G3' ]
 
   notes.forEach( note => {
     let delay = Math.random() * 16;
     let loopLength = Math.random() * 6 + 17;
-    startLoop('Grand Piano', note, convolver, loopLength, delay);
+    startLoop('Harp', note, convolver, loopLength, delay);
   });
 })
 
