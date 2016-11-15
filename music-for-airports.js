@@ -1,22 +1,5 @@
 const OCTAVE = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
-// const SAMPLE_LIBRARY = {
-//   'Grand Piano': [
-//     { note: 'A', octave: 4, file: 'Samples/Grand Piano/piano-f-a4.wav' },
-//     { note: 'A',  octave: 5, file: 'Samples/Grand Piano/piano-f-a5.wav' },
-//     { note: 'A',  octave: 6, file: 'Samples/Grand Piano/piano-f-a6.wav' },
-//     { note: 'C',  octave: 4, file: 'Samples/Grand Piano/piano-f-c4.wav' },
-//     { note: 'C',  octave: 5, file: 'Samples/Grand Piano/piano-f-c5.wav' },
-//     { note: 'C',  octave: 6, file: 'Samples/Grand Piano/piano-f-c6.wav' },
-//     { note: 'D#',  octave: 4, file: 'Samples/Grand Piano/piano-f-d#4.wav' },
-//     { note: 'D#',  octave: 5, file: 'Samples/Grand Piano/piano-f-d#5.wav' },
-//     { note: 'D#',  octave: 6, file: 'Samples/Grand Piano/piano-f-d#6.wav' },
-//     { note: 'F#',  octave: 4, file: 'Samples/Grand Piano/piano-f-f#4.wav' },
-//     { note: 'F#',  octave: 5, file: 'Samples/Grand Piano/piano-f-f#5.wav' },
-//     { note: 'F#',  octave: 6, file: 'Samples/Grand Piano/piano-f-f#6.wav' }
-//   ]
-// }
-
 const SAMPLE_LIBRARY = {
   'Harp': fillHarpLibrary()
 }
@@ -33,7 +16,7 @@ function fillHarpLibrary() {
       library.push({
         note: note.toUpperCase(),
         octave: octave,
-        file: `Samples/Cello/cello-${note}${octave}.wav`
+        file: `Samples/Cello/cello-${note}${octave}.mp3`
       })
     })
   })
