@@ -3,7 +3,7 @@ const OCTAVE = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 const SAMPLE_LIBRARY = {
   'Harp': fillHarpLibrary()
 }
-  console.log(SAMPLE_LIBRARY);
+console.log(SAMPLE_LIBRARY);
 
 let audioContext = new AudioContext();
 
@@ -53,9 +53,9 @@ function getNearestSample( sampleBank, note, octave ) {
 }
 
 function fetchSample( path ) {
-  return fetch('Samples/' + encodeURIComponent(path))
-    .then(response => response.arrayBuffer())
-    .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer));
+  return fetch('./samples/' + encodeURIComponent(path))
+  .then(response => response.arrayBuffer())
+  .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer));
 }
 
 function getSample( instrument, noteAndOctave ) {
@@ -93,17 +93,27 @@ function startLoop(instrument, note, destination, loopLengthSeconds, delaySecond
     );
 }
 
-fetchSample('AirportTerminal.wav').then(convolverBuffer => {
-  let convolver = audioContext.createConvolver();
-  convolver.buffer = convolverBuffer;
-  convolver.connect( audioContext.destination );
+function getNotes() {
+  return randomChoiceFrom([
+    [ 'D2', 'A2', 'D3', 'G3', 'A3', 'C#4', 'D4' ],
+    [ 'F3', 'Ab3', 'C4', 'Db4', 'Eb4', 'F4', 'Ab4' ],
+    [ 'B2', 'B3', 'E4', 'A4', 'B4', 'E5' ],
+    [ 'B2', 'F#3', 'A#3', 'B3', 'D#4', 'F#4' ],
+    [ 'C3', 'F4', 'Bb3', 'D4', 'Eb4', 'G3' ]
+  ]);
+}
 
-  let notes = [ 'D2', 'A2', 'D3', 'G3', 'A3', 'C#4', 'D4' ];
+function randomChoiceFrom(array) {
+  return array[Math.floor(Math.random(array.length))]
+}
 
-  // let notes = ['F3', 'Ab3', 'C4', 'Db4', 'Eb4', 'F4', 'Ab4'];
-  // let notes = [ 'B2', 'B3', 'E4', 'A4', 'B4', 'E5' ];
-  // let notes = [ 'B2', 'F#3', 'A#3', 'B3', 'D#4', 'F#4' ];
-  // let notes = [ 'C3', 'F4', 'Bb3', 'D4', 'Eb4', 'G3' ]
+window.onload = () => {
+  fetchSample('AirportTerminal.wav').then(convolverBuffer => {
+    let convolver = audioContext.createConvolver();
+    convolver.buffer = convolverBuffer;
+    convolver.connect( audioContext.destination );
+
+  let notes = getNotes();
 
   notes.forEach( note => {
     let delay = Math.random() * 16;
@@ -111,5 +121,5 @@ fetchSample('AirportTerminal.wav').then(convolverBuffer => {
     startLoop('Harp', note, convolver, loopLength, delay);
   });
 })
-
+}
 
