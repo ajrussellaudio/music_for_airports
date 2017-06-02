@@ -5,3 +5,5 @@ This project began by following [this tutorial](https://teropa.info/blog/2016/07
 Samples are taken from the [Sonatina Symphonic Orchestra](http://sso.mattiaswestlund.net/download.html).
 
 Listen here: https://kingliest-bat.000webhostapp.com/
+
+Needs to live on a server due to CORS. To run locally use `python -m SimpleHTTPServer 3000`
